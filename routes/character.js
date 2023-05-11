@@ -2,7 +2,6 @@ const express = require("express");
 const axios = require("axios");
 
 const { URL_BASE } = require("./default");
-const { sanitizeObject } = require("../utils/utils");
 const MARVEL_SK = process.env.MARVEL_SK;
 
 const router = express.Router();
@@ -11,7 +10,11 @@ router.get("/characters", async (req, res) => {
   const { limit, skip, name } = req.query;
 
   // For prettier query, get rid of falsy values
-  const filters = sanitizeObject({ limit, skip, name }, { strict: false });
+  const filters = {
+    name: name || "",
+    skip: (skip && skip >= 0) || "0",
+    limit: (limit && limit > 0 && limit <= 100) || "100",
+  };
 
   const searchParams = new URLSearchParams({
     apiKey: MARVEL_SK,
