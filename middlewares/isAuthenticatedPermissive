@@ -1,0 +1,22 @@
+const User = require("../models/User");
+
+/** Silently attach user info if the user is authenticated but don't reject if not */
+const isAuthenticatedPermissive = async (req, res, next) => {
+  if (req.headers.authorization) {
+    // get token
+    const token = req.headers.authorization.replace("Bearer ", "");
+
+    // check token and drop sensitive info
+    const user = await User.findOne({ token: token }).select("account");
+
+    // ok
+    if (user) {
+      // forward sanitized user content to next func
+      req.user = user;
+    }
+  }
+
+  next();
+};
+
+module.exports = isAuthenticatedPermissive;
