@@ -58,7 +58,7 @@ const removeFromFavorites = async (userId, collection, itemId) => {
   const user = await User.findById(userId);
   // Get favorites
   const favSet = new Set(user.favorites[collection]);
-  favSet.remove(itemId);
+  favSet.delete(itemId);
 
   // Update DB
   // new object to be safe

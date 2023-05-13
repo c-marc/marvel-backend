@@ -6,10 +6,9 @@ const { addToFavorites, removeFromFavorites } = require("../services/favorite");
 const router = express.Router();
 
 // Use middleware as an endpoint
-router.get("/user", isAuthenticated, async (req, res) => {
+router.get("/user", isAuthenticated, (req, res) => {
   try {
     const securedUser = req.user;
-
     res.json(securedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -25,7 +24,7 @@ router.post(
       const userId = req.user._id;
       const { collection, itemId } = req.params;
       const newFavorites = await addToFavorites(userId, collection, itemId);
-      res.json(newFavorites);
+      res.status(201).json(newFavorites);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

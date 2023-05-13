@@ -4,10 +4,11 @@ const isAuthenticated = async (req, res, next) => {
   if (req.headers.authorization) {
     // get token
     const token = req.headers.authorization.replace("Bearer ", "");
-    // console.log(token);
 
     // check token and drop sensitive info
-    const user = await User.findOne({ token: token }).select("account");
+    const user = await User.findOne({ token: token }).select(
+      "email account token"
+    );
 
     // ok
     if (user) {
